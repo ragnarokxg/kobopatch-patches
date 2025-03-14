@@ -11,58 +11,65 @@ My 10 line spacing values:
   - Enabled: no
   - PatchGroup: Line spacing values alternatives
   - Description: |
-      This patch changes the values on the line spacing adjustment slider,
-      reducing the number of spacing options from 15 to 10, but allowing
-      much narrower spacing values to be set.
+      This patch modifies the line spacing adjustment slider, reducing the 
+      number of spacing options from 15 to 10 while allowing narrower values.
     # Bypass code-constructed values 1.0, 1.2, 1.5, 2.0, 3.0
     # These are all the appends not loaded using adr.
-  - BaseAddress:  {Sym: "ReadingSettings::lineHeightScalars() const", Rel: 84} # first append
-  - ReplaceBytes: {Offset:   0, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
-  - ReplaceBytes: {Offset:  86, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
-  - ReplaceBytes: {Offset: 128, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
-  - ReplaceBytes: {Offset: 188, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
-  - ReplaceBytes: {Offset: 290, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
-    # 10 values for replacement, change these replace_float values to suit:
-    # Find the prologue for the values + first subtraction (has been unique in
-    # every version so far, and is near impossible to change and fail silently):
+  - BaseAddress: {Sym: "ReadingSettings::lineHeightScalars() const", Rel: 84} # First append
+
+  # Remove unnecessary spacing values by NOPing `QList<double>::append(double const&)`
+  - ReplaceBytes:
+      - {Offset: 0,   FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
+      - {Offset: 86,  FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
+      - {Offset: 128, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
+      - {Offset: 188, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
+      - {Offset: 290, FindInstBLX: {SymPLT: "QList<double>::append(double const&)"}, ReplaceInstNOP: true}
+
+  # Locate the floating-point values to modify
   - FindBaseAddressHex: CDCC CCCC CCCC F03F 1F85
-  - ReplaceFloat: {Offset: 0x00,  Find: 1.05, Replace: 0.8}
-  - ReplaceFloat: {Offset: 0x08,  Find: 1.07, Replace: 0.85}
-  - ReplaceFloat: {Offset: 0x10,  Find: 1.1,  Replace: 0.875}
-  - ReplaceFloat: {Offset: 0x18,  Find: 1.35, Replace: 0.9}
-  - ReplaceFloat: {Offset: 0x20,  Find: 1.7,  Replace: 0.925}
-  - ReplaceFloat: {Offset: 0x28,  Find: 1.8,  Replace: 0.95}
-  - ReplaceFloat: {Offset: 0x30,  Find: 2.2,  Replace: 0.975}
-  - ReplaceFloat: {Offset: 0x38,  Find: 2.4,  Replace: 1.0}
-  - ReplaceFloat: {Offset: 0x40,  Find: 2.6,  Replace: 1.05}
-  - ReplaceFloat: {Offset: 0x48,  Find: 2.8,  Replace: 1.1}
+
+  # Replace the existing line spacing values with optimized values
+  - ReplaceFloat:
+      - {Offset: 0x00,  Find: 1.05, Replace: 0.8}
+      - {Offset: 0x08,  Find: 1.07, Replace: 0.85}
+      - {Offset: 0x10,  Find: 1.1,  Replace: 0.875}
+      - {Offset: 0x18,  Find: 1.35, Replace: 0.9}
+      - {Offset: 0x20,  Find: 1.7,  Replace: 0.925}
+      - {Offset: 0x28,  Find: 1.8,  Replace: 0.95}
+      - {Offset: 0x30,  Find: 2.2,  Replace: 0.975}
+      - {Offset: 0x38,  Find: 2.4, Replace: 1.0}
+      - {Offset: 0x40,  Find: 2.6, Replace: 1.05}
+      - {Offset: 0x48,  Find: 2.8, Replace: 1.1}
 
 # TODO(geek1011): My 24 line spacing values
 
 Custom left & right margins:
   - Enabled: no
   - Description: |
-      This patch sets the size of the margins added by the margins
-      adjustment slider, as a percentage of screen width.
+      This patch modifies the margins adjustment slider, setting the size of 
+      margins as a percentage of screen width.
+
+  # Locate the base address using a unique identifier
   - FindBaseAddressString: "\0\0\0\0\x02\0\0\0\x04\0\0\0\x06\0\0\0\x08\0\0\0\x0A\0\0\0\x0C\0\0\0\x0E\0\0\0\x10\0\0\0"
-  # 9 values for replacement:
-  - ReplaceInt: {Offset: 0x00, Find:  0, Replace: 0}
-  - ReplaceInt: {Offset: 0x04, Find:  2, Replace: 1}
-  - ReplaceInt: {Offset: 0x08, Find:  4, Replace: 2}
-  - ReplaceInt: {Offset: 0x0C, Find:  6, Replace: 3}
-  - ReplaceInt: {Offset: 0x10, Find:  8, Replace: 4}
-  - ReplaceInt: {Offset: 0x14, Find: 10, Replace: 5}
-  - ReplaceInt: {Offset: 0x18, Find: 12, Replace: 6}
-  - ReplaceInt: {Offset: 0x1C, Find: 14, Replace: 7}
-  - ReplaceInt: {Offset: 0x20, Find: 16, Replace: 8}
+
+  # Adjust margin percentage values
+  - ReplaceInt:
+      - {Offset: 0x00, Find:  0,  Replace: 0}
+      - {Offset: 0x04, Find:  2,  Replace: 1}
+      - {Offset: 0x08, Find:  4,  Replace: 2}
+      - {Offset: 0x0C, Find:  6,  Replace: 3}
+      - {Offset: 0x10, Find:  8,  Replace: 4}
+      - {Offset: 0x14, Find: 10, Replace: 5}
+      - {Offset: 0x18, Find: 12, Replace: 6}
+      - {Offset: 0x1C, Find: 14, Replace: 7}
+      - {Offset: 0x20, Find: 16, Replace: 8}
 
 Custom font sizes:
   - Enabled: no
   - Description: |
-      Changes the range of sizes on the font size slider so that there are more of
-      the small sizes and fewer of the large sizes.
-      With this patch enabled you will not be able to select the very large font
-      sizes, but will be able to make finer adjustment to the smaller sizes.
+      Modifies the font size slider to provide finer adjustments for smaller sizes
+      while limiting very large font sizes.
+
   # Font sizes depend on the device's screen density. Unpatched, the sizes
   # increase in steps of 1 from the smallest size up to size 44, then in steps
   # of 2 up to size 68, then in steps of 4 up to the largest size:
@@ -88,47 +95,61 @@ Custom font sizes:
   # Note (pgaskin): The device values can be determined with info from
   #    https://gist.github.com/pgaskin/613b34c23f026f7c39c50ee32f5e167e and
   #    the Device::is* calls.
-  #
-  # This patch was rewritten for 18220 by @shermp.
-  #
+
+  # Locate the base address for font sizes
   - BaseAddress: "N3FontTypeUtil::fontSizes()"
-  # Initial font size:
-  - ReplaceInt: {Offset:  378, Find:   8, Replace:   8} # Other devices
-  - ReplaceInt: {Offset:  374, Find:  11, Replace:  11} # LibraH2O (storm)
-  - ReplaceInt: {Offset:   36, Find:  10, Replace:  10} # GloHD/ClaraHD (alyssum nova)
-  - ReplaceInt: {Offset:  404, Find:  14, Replace:  14} # Forma/AuraOne/Sage/Elipsa (daylight)
-  # Increment:
-  - ReplaceInt: {Offset:  222, Find:  21, Replace:  43} # Add font sizes in increments of 1 until this size exceeded
-  - ReplaceInt: {Offset:  228, Find:  22, Replace:  44} # Continue from this font size
-  - ReplaceInt: {Offset:  250, Find:  49, Replace:  67} # Add font sizes in increments of 2 until this size exceeded
-  - ReplaceInt: {Offset:  256, Find:  50, Replace:  68} # Continue from this font size
-  # Now increment by +4 until final font size:
-  - ReplaceInt: {Offset:  420, Find:   90, Replace:   80} # Other devices
-  - ReplaceInt: {Offset:  422, Find:  122, Replace:   88} # Aura/Glo/Nia (phoenix)
-  - ReplaceInt: {Offset:   48, Find:  150, Replace:  108} # LibraH2O/AuraHD/ClaraHD/GloHD/AuraH2O/Libra2 (dragon)
-  - ReplaceInt: {Offset:  400, Find:  195, Replace:  132} # Forma/AuraOne/Sage/Elipsa (daylight)
+
+  # Adjust initial font sizes for different devices
+  - ReplaceInt:
+      - {Offset:  378, Find:   8,  Replace:   8}  # Other devices
+      - {Offset:  374, Find:  11, Replace:  11}  # LibraH2O (storm)
+      - {Offset:   36, Find:  10, Replace:  10}  # GloHD/ClaraHD (alyssum nova)
+      - {Offset:  404, Find:  14, Replace:  14}  # Forma/AuraOne/Sage/Elipsa (daylight)
+
+  # Modify step increments for font sizes
+  - ReplaceInt:
+      - {Offset:  222, Find:  21, Replace:  43}  # Increase in steps of 1 up to this size
+      - {Offset:  228, Find:  22, Replace:  44}  # Continue from this font size
+      - {Offset:  250, Find:  49, Replace:  67}  # Increase in steps of 2 up to this size
+      - {Offset:  256, Find:  50, Replace:  68}  # Continue from this font size
+
+  # Adjust maximum font sizes with step increments of 4
+  - ReplaceInt:
+      - {Offset:  420, Find:   90, Replace:   80}  # Other devices
+      - {Offset:  422, Find:  122, Replace:   88}  # Aura/Glo/Nia (phoenix)
+      - {Offset:   48, Find:  150, Replace:  108}  # LibraH2O/AuraHD/ClaraHD/GloHD/AuraH2O/Libra2 (dragon)
+      - {Offset:  400, Find:  195, Replace:  132}  # Forma/AuraOne/Sage/Elipsa (daylight)
 
 ePub fixed top/bottom margins:
   - Enabled: no
   - PatchGroup: ePub padding-bottom alternatives
-  - Description:
+  - Description: |
       This patch sets the @page margin sizes in epubs to fixed custom values,
       overriding any @page margin set in the book's CSS stylesheet. (But beware
       that some books also set page margins in an XPGT stylesheet which are added
       to any CSS @page margins, and those will not be affected by this patch).
     #      padding-bottom: %1em !important;\n
     # --> }@page{margin:00px 00px 00px}body{
+  
   - FindReplaceString:
       Find: "\x20padding-bottom: %1em !important;\n"
       Replace: "}@page{margin:00px 00px 00px}body{"
-    # *** Replacement values start here, don't change anything above ***
-  - ReplaceString: {Offset: 0x0E, Find: "00px", Replace: "00px", MustMatchLength: yes} # TOP MARGIN: Replacement value is the margin size (two digits) in pixels:
-  - ReplaceString: {Offset: 0x18, Find: "00px", Replace: "00px", MustMatchLength: yes} # BOTTOM MARGIN: Replacement value is the margin size (two digits) in pixels:
-    #
-    # Minimum LEFT/RIGHT MARGIN: (This margin will overlap the left/right margin
-    # set with the adjustment slider, not add to it.) Replacement value is margin
-    # size (two digits) in pixels:
-  - ReplaceString: {Offset: 0x13, Find: "00px", Replace: "00px", MustMatchLength: yes}
+
+  # *** Replacement values start here, don't change anything above ***
+
+  # TOP MARGIN: Replacement value is the margin size (two digits) in pixels:
+  - ReplaceString: 
+      {Offset: 0x0E, Find: "00px", Replace: "00px", MustMatchLength: yes} 
+
+  # BOTTOM MARGIN: Replacement value is the margin size (two digits) in pixels:
+  - ReplaceString: 
+      {Offset: 0x18, Find: "00px", Replace: "00px", MustMatchLength: yes} 
+
+  # Minimum LEFT/RIGHT MARGIN: (This margin will overlap the left/right margin
+  # set with the adjustment slider, not add to it.) Replacement value is margin
+  # size (two digits) in pixels:
+  - ReplaceString: 
+      {Offset: 0x13, Find: "00px", Replace: "00px", MustMatchLength: yes} 
 
 ePub disable built-in body padding-bottom:
   - Enabled: no
