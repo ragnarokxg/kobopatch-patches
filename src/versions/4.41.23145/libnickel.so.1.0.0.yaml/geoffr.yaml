@@ -173,12 +173,28 @@ Custom kepub default margins:
       Sets the built-in minimum margin for KePub books and Pocket articles to
       zero, the same as it is in ePub books. This only affects left/right margins
       in normal reading mode, but all four margins in full-screen mode.
+
   - BaseAddress: "ContentSettingManager::readerDefaultMargins(Device const&, bool)"
-  - ReplaceInt: {Offset: 52, Find: 60, Replace: 0} # Device = AuraOne, Type = Japanese kepub
-  - ReplaceInt: {Offset: 54, Find: 32, Replace: 0} # Device = AuraOne, Type = pocket article or non-Japanese kepub
-  - ReplaceInt: {Offset: 58, Find: 20, Replace: 0} # Device = Touch/Mini, Type = Any
-  - ReplaceInt: {Offset: 20, Find: 45, Replace: 0} # Device = Other, Type = Japanese kepub
-  - ReplaceInt: {Offset: 22, Find: 25, Replace: 0} # Device = Other, Type = pocket article or non-Japanese kepub
+
+  # Device = AuraOne, Type = Japanese kepub
+  - ReplaceInt: 
+      {Offset: 52, Find: 60, Replace: 0} 
+
+  # Device = AuraOne, Type = pocket article or non-Japanese kepub
+  - ReplaceInt: 
+      {Offset: 54, Find: 32, Replace: 0} 
+
+  # Device = Touch/Mini, Type = Any
+  - ReplaceInt: 
+      {Offset: 58, Find: 20, Replace: 0} 
+
+  # Device = Other, Type = Japanese kepub
+  - ReplaceInt: 
+      {Offset: 20, Find: 45, Replace: 0} 
+
+  # Device = Other, Type = pocket article or non-Japanese kepub
+  - ReplaceInt: 
+      {Offset: 22, Find: 25, Replace: 0}
 
 Block WiFi firmware upgrade:
   - Enabled: no
